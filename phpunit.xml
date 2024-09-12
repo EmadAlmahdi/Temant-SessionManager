@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit cacheDirectory="build/.phpunit.cache" bootstrap="vendor/autoload.php" colors="true" stopOnFailure="false">
+<phpunit cacheDirectory="build/.phpunit.cache" bootstrap="vendor/autoload.php" colors="true"
+    stopOnFailure="false">
     <testsuites>
         <testsuite name="Temant Session Manager Tests">
             <directory>Tests</directory>
@@ -11,7 +12,7 @@
             <clover outputFile="build/coverage/clover.xml" />
             <html outputDirectory="build/coverage/html" />
         </report>
-    </coverage>    
+    </coverage>
 
     <source>
         <include>
