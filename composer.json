@@ -1,0 +1,48 @@
+{
+    "name": "temant/session-manager",
+    "description": "A comprehensive PHP utility class for secure and efficient managing sessions.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Emad Almahdi",
+            "email": "emad@almahdi.se"
+        }
+    ],
+    "require-dev": {
+        "phpstan/phpstan": "^1.12",
+        "phpunit/phpunit": "^11.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Temant\\SessionManager\\": "Src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Temant\\SessionManager\\Tests\\": "Tests/"
+        }
+    },
+    "scripts": {
+        "phpstan": "./vendor/bin/phpstan analyse",
+        "phpunit": "./vendor/bin/phpunit",
+        "check-all": [
+            "@phpstan",
+            "@phpunit"
+        ]
+    },
+    "scripts-descriptions": {
+        "phpstan": "Run PHPStan for static analysis",
+        "phpunit": "Run PHPUnit tests"
+    },
+    "scripts-aliases": {
+        "phpstan": [
+            "stan",
+            "analyze",
+            "analyse"
+        ],
+        "phpunit": [
+            "test"
+        ]
+    }
+}
