@@ -98,14 +98,13 @@ namespace Temant\SessionManager {
          *
          * @param string $key The name of the session variable.
          * @return bool True if the session variable exists, false otherwise.
-         * @throws SessionNotStartedException If the session is not active.
          */
         public function has(string $key): bool
         {
             if ($this->isActive()) {
                 return isset($_SESSION[$key]);
             }
-            throw new SessionNotStartedException('Cannot check session variable, session not started.');
+            return false;
         }
 
         /**
