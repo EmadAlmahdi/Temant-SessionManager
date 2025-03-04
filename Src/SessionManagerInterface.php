@@ -2,6 +2,8 @@
 
 namespace Temant\SessionManager;
 
+use Temant\SessionManager\Exceptions\SessionStartedException;
+
 interface SessionManagerInterface
 {
     /**
@@ -20,10 +22,38 @@ interface SessionManagerInterface
     public function setName(string $name): self;
 
     /**
-     * Starts a new session or resumes the existing session.
+     * Start a new session or resume the existing session.
      *
-     * @param array<string, mixed> $options Array of session configuration options.
+     * @param array{
+     *     save_path?: string,
+     *     name?: string,
+     *     save_handler?: string,
+     *     gc_probability?: int,
+     *     gc_divisor?: int,
+     *     gc_maxlifetime?: int,
+     *     serialize_handler?: string,
+     *     cookie_lifetime?: int,
+     *     cookie_path?: string,
+     *     cookie_domain?: string,
+     *     cookie_secure?: bool,
+     *     cookie_httponly?: bool,
+     *     cookie_samesite?: 'Strict'|'Lax'|'None'|"",
+     *     use_strict_mode?: bool,
+     *     use_cookies?: bool,
+     *     use_only_cookies?: bool,
+     *     referer_check?: string,
+     *     cache_limiter?: string,
+     *     cache_expire?: int,
+     *     use_trans_sid?: bool,
+     *     trans_sid_tags?: string,
+     *     trans_sid_hosts?: string,
+     *     sid_length?: int,
+     *     sid_bits_per_character?: int,
+     *     lazy_write?: bool
+     * } $options Array of session configuration options.
+     *
      * @return bool True if the session was successfully started, false otherwise.
+     * @throws SessionStartedException If the session is already started.
      */
     public function start(array $options = []): bool;
 

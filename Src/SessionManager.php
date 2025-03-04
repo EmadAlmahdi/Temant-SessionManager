@@ -34,10 +34,7 @@ class SessionManager implements SessionManagerInterface
     }
 
     /**
-     * Start a new session or resume the existing session.
-     * @param array<string, mixed> $options Array of session configuration options.
-     * @return bool True if the session was successfully started, false otherwise.
-     * @throws SessionStartedException If the session is already started.
+     * @inheritDoc
      */
     public function start(array $options = []): bool
     {

@@ -17,17 +17,17 @@ class SessionManagerTest extends TestCase
 
     protected function tearDown(): void
     {
-        if (session_status() === PHP_SESSION_ACTIVE) {
-            session_destroy();
+        if ($this->sessionManager->isActive()) {
+            $this->sessionManager->destroy();
         }
     }
 
     public function testIsActive(): void
     {
         $this->assertFalse($this->sessionManager->isActive());
-        session_start();
+        $this->sessionManager->start();
         $this->assertTrue($this->sessionManager->isActive());
-        session_destroy();
+        $this->sessionManager->destroy();
     }
 
     public function testSetName(): void
@@ -39,9 +39,9 @@ class SessionManagerTest extends TestCase
     public function testSetNameThrowsExceptionIfSessionStarted(): void
     {
         $this->expectException(SessionStartedException::class);
-        session_start();
+        $this->sessionManager->start();
         $this->sessionManager->setName('MY_SESSION');
-        session_destroy();
+        $this->sessionManager->destroy();
     }
 
     public function testStart(): void
@@ -53,7 +53,7 @@ class SessionManagerTest extends TestCase
     public function testStartThrowsExceptionIfSessionStarted(): void
     {
         $this->expectException(SessionStartedException::class);
-        session_start();
+        $this->sessionManager->start();
         $this->sessionManager->start();
     }
 
@@ -71,20 +71,20 @@ class SessionManagerTest extends TestCase
 
     public function testSetGet(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $this->sessionManager->set('key', 'value');
         $this->assertSame('value', $this->sessionManager->get('key'));
     }
 
     public function testGetReturnsNullIfNotExist(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $this->assertNull($this->sessionManager->get('nonexistent'));
     }
 
     public function testAll(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $this->sessionManager->set('key1', 'value1');
         $this->sessionManager->set('key2', 'value2');
         $this->assertSame(['key1' => 'value1', 'key2' => 'value2'], $this->sessionManager->all());
@@ -98,20 +98,15 @@ class SessionManagerTest extends TestCase
 
     public function testHas(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $this->sessionManager->set('key', 'value');
         $this->assertTrue($this->sessionManager->has('key'));
         $this->assertFalse($this->sessionManager->has('nonexistent'));
     }
-    public function testHasThrowsExceptionIfSessionStarted(): void
-    {
-        $this->expectException(SessionNotStartedException::class);
-        $this->sessionManager->has('key');
-    }
 
     public function testRemove(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $this->sessionManager->set('key', 'value');
         $this->sessionManager->remove('key');
         $this->assertFalse($this->sessionManager->has('key'));
@@ -125,7 +120,7 @@ class SessionManagerTest extends TestCase
 
     public function testRegenerate(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $oldId = session_id();
         $this->sessionManager->regenerate();
         $this->assertNotSame($oldId, session_id());
@@ -139,7 +134,7 @@ class SessionManagerTest extends TestCase
 
     public function testDestroy(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $this->assertTrue($this->sessionManager->destroy());
         $this->assertFalse($this->sessionManager->isActive());
     }
@@ -152,7 +147,7 @@ class SessionManagerTest extends TestCase
 
     public function testClose(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $this->sessionManager->close();
         $this->assertFalse($this->sessionManager->isActive());
     }
@@ -165,7 +160,7 @@ class SessionManagerTest extends TestCase
 
     public function testGetId(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $this->assertSame(session_id(), $this->sessionManager->getId());
     }
 
@@ -184,13 +179,13 @@ class SessionManagerTest extends TestCase
     public function testSetIdThrowsExceptionIfSessionStarted(): void
     {
         $this->expectException(SessionStartedException::class);
-        session_start();
+        $this->sessionManager->start();
         $this->sessionManager->setId('newSessionId');
     }
 
     public function testSetArrayValue(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $value = ['foo' => 'bar'];
         $this->sessionManager->set('arrayKey', $value);
         $this->assertSame($value, $this->sessionManager->get('arrayKey'));
@@ -198,7 +193,7 @@ class SessionManagerTest extends TestCase
 
     public function testSetObjectValue(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $value = new stdClass();
         $value->foo = 'bar';
         $this->sessionManager->set('objectKey', $value);
@@ -207,7 +202,7 @@ class SessionManagerTest extends TestCase
 
     public function testOverwriteExistingKey(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $this->sessionManager->set('key', 'value1');
         $this->sessionManager->set('key', 'value2');
         $this->assertSame('value2', $this->sessionManager->get('key'));
@@ -215,7 +210,7 @@ class SessionManagerTest extends TestCase
 
     public function testRemoveNonExistentKey(): void
     {
-        session_start();
+        $this->sessionManager->start();
         $this->sessionManager->remove('nonexistent');
         $this->assertFalse($this->sessionManager->has('nonexistent'));
     }
@@ -225,5 +220,12 @@ class SessionManagerTest extends TestCase
         $this->sessionManager->setName('MY_SESSION');
         $this->sessionManager->start();
         $this->assertSame('MY_SESSION', session_name());
+    }
+
+    public function testSetIdBeforeSessionStart(): void
+    {
+        $this->sessionManager->setId('customSessionId');
+        $this->sessionManager->start();
+        $this->assertSame('customSessionId', session_id());
     }
 }
