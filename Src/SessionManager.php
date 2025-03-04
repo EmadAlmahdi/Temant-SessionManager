@@ -78,7 +78,7 @@ class SessionManager implements SessionManagerInterface
     /**
      * Get the value of all the session variables.
      *
-     * @return array<string, mixed> The array of all session variables.
+     * @return array<mixed> The array of all session variables.
      * @throws SessionNotStartedException If the session is not active.
      */
     public function all(): array
