@@ -98,6 +98,7 @@ class SessionManagerTest extends TestCase
 
     public function testHas(): void
     {
+        $this->assertFalse($this->sessionManager->has('key'));
         $this->sessionManager->start();
         $this->sessionManager->set('key', 'value');
         $this->assertTrue($this->sessionManager->has('key'));
